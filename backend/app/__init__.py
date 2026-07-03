@@ -1,0 +1,1 @@
+"""Ariadne backend application package."""

@@ -1,0 +1,16 @@
+# Ariadne backend dependencies
+# Cognee is installed editable from the sibling clone so we can build/test locally
+# (same SDK targets Cognee Cloud via cognee.serve()).
+-e ../../cognee
+
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+python-dotenv>=1.0
+httpx>=0.27
+transformers>=4.40  # tokenizer for Cognee chunking (HUGGINGFACE_TOKENIZER); no torch needed
+
+# tests
+pytest>=8.0
+pytest-asyncio>=0.23
+anyio>=4.0

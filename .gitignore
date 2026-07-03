@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Runtime state (active-dataset registry, etc.)
+.state/
+evals/reports/
+**/evals/reports/
+
+# Cognee local stores
+.cognee_system/
+.cognee_data/
+.data_storage/
+cognee_data/
+*.duckdb
+*.sqlite
+*.lancedb/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db

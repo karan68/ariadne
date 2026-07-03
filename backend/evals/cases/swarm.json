@@ -1,0 +1,83 @@
+{
+  "description": "Ariadne P2 swarm eval — one labeled case per specialist agent plus a cross-cutting swarm case. Each case declares the gold expectations and per-metric thresholds the harness scores against. Gold values are grounded in the authoritative seed constants (app/seed/odyssey_patient.GOLDEN, app/seed/reference_data.REFERENCE_GOLDEN) and the reproducible live swarm outputs recorded in plan.md §19; the harness cross-checks the small literal gold in this file against those constants to prevent drift. `compare` is 'ge' (value >= threshold) unless noted; `live_only` metrics are skipped in the deterministic --offline run.",
+  "cases": [
+    {
+      "id": "timeline",
+      "agent": "timeline",
+      "description": "TimelineAgent reconstructs a date-ordered longitudinal arc and surfaces the confirmed-diagnosis milestone; the narrative is citation-backed.",
+      "gold": {"dx_date": "2024-03-01", "dx_term": "takayasu"},
+      "metrics": {
+        "temporal_ordering_accuracy": {"threshold": 1.0, "compare": "ge"},
+        "dx_milestone_recall": {"threshold": 1.0, "compare": "ge"},
+        "event_count": {"threshold": 10, "compare": "ge", "live_only": true}
+      }
+    },
+    {
+      "id": "connections",
+      "agent": "connections",
+      "description": "ConnectionsAgent ranks the differential from the deterministic phenotype overlap; the large-vessel pattern (Takayasu) must rank #1 (precision@1). HPO-recall is a secondary coverage metric against the full golden phenotype (symptom-derivable subset; observed live ~0.57 since lab/condition-encoded phenotypes are recovered by other signals). Every surfaced candidate is cited and free of assertive-diagnosis language.",
+      "gold": {"top_condition": "Takayasu arteritis"},
+      "metrics": {
+        "precision_at_1": {"threshold": 1.0, "compare": "ge"},
+        "hpo_recall": {"threshold": 0.5, "compare": "ge", "live_only": true},
+        "citation_coverage": {"threshold": 1.0, "compare": "ge", "live_only": true},
+        "lint_violations": {"threshold": 0, "compare": "le", "live_only": true}
+      }
+    },
+    {
+      "id": "trials",
+      "agent": "trials",
+      "description": "TrialsAgent reproduces the golden eligibility partition (matches 001/002/003, rejects 004/005/006 incl. the paediatric age trap). Precision and recall of the eligible set are scored against the golden match set. Every surfaced match is cited and lint-clean.",
+      "gold": {"should_match": ["NCT09000001", "NCT09000002", "NCT09000003"]},
+      "metrics": {
+        "eligibility_precision": {"threshold": 1.0, "compare": "ge"},
+        "eligibility_recall": {"threshold": 1.0, "compare": "ge"},
+        "citation_coverage": {"threshold": 1.0, "compare": "ge", "live_only": true},
+        "lint_violations": {"threshold": 0, "compare": "le", "live_only": true}
+      }
+    },
+    {
+      "id": "safety",
+      "agent": "safety",
+      "description": "SafetyAgent detects the three grounded signals for the hero (methotrexate+aspirin interaction, cumulative immunosuppressant stack, cross-prescriber iron duplication); detection recall is scored against that gold signal set. Every alert is cited and free of diagnosis language.",
+      "gold": {"expected_signals": ["antimetabolite-nsaid", "immunosuppressant-stack", "duplication:iron"]},
+      "metrics": {
+        "signal_detection_recall": {"threshold": 1.0, "compare": "ge"},
+        "citation_coverage": {"threshold": 1.0, "compare": "ge", "live_only": true},
+        "lint_violations": {"threshold": 0, "compare": "le", "live_only": true}
+      }
+    },
+    {
+      "id": "briefing",
+      "agent": "briefing",
+      "description": "BriefingAgent's one-pager includes the confirmed-diagnosis milestone among its highlights, surfaces at least three cited open questions, and every backing finding is cited (derived only from cited memory).",
+      "gold": {"dx_date": "2024-03-01", "dx_term": "takayasu"},
+      "metrics": {
+        "dx_milestone_recall": {"threshold": 1.0, "compare": "ge"},
+        "open_questions_count": {"threshold": 3, "compare": "ge", "live_only": true},
+        "citation_coverage": {"threshold": 1.0, "compare": "ge", "live_only": true}
+      }
+    },
+    {
+      "id": "justify",
+      "agent": "justify",
+      "description": "JustifyAgent grounds the prior-auth request on the biologic (tocilizumab) for the most-recently-confirmed indication (Takayasu), assembles all four required elements, and every element is citation-backed. grounding_correctness scores the drug+indication selection; element_completeness scores the satisfied-element fraction.",
+      "gold": {"requested_drug": "tocilizumab", "indication_term": "takayasu"},
+      "metrics": {
+        "grounding_correctness": {"threshold": 1.0, "compare": "ge"},
+        "element_completeness": {"threshold": 1.0, "compare": "ge", "live_only": true},
+        "citation_coverage": {"threshold": 1.0, "compare": "ge", "live_only": true}
+      }
+    },
+    {
+      "id": "swarm",
+      "agent": "swarm",
+      "description": "Cross-cutting invariants over every item surfaced by the whole swarm: citation-coverage is 100% (any uncited finding is suppressed before it reaches this metric) and the suggestive agents (connections/trials/safety) emit zero assertive-diagnosis-language violations.",
+      "gold": {},
+      "metrics": {
+        "swarm_citation_coverage": {"threshold": 1.0, "compare": "ge", "live_only": true},
+        "swarm_lint_violations": {"threshold": 0, "compare": "le", "live_only": true}
+      }
+    }
+  ]
+}
