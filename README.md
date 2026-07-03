@@ -8,6 +8,10 @@
 > and the full `remember → recall → improve → forget` lifecycle is **load-bearing**, not
 > decorative. Ariadne is impossible on plain vector RAG.
 
+📖 **New to the project? Start with the story:** [**"The Girl Whose Pulse Went Missing"**](docs/medium-article.md)
+— a human, India-centric walkthrough of the real problem Ariadne solves. Also see the
+[architecture & diagrams](docs/architecture.md) and the [3-minute demo script](docs/demo-script.md).
+
 ---
 
 ## The problem
