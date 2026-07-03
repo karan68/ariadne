@@ -100,6 +100,66 @@ sequence diagrams above.
 
 ---
 
+## What we built *beyond* Cognee
+
+Using Cognee's four verbs is table stakes. The engineering that makes Ariadne trustworthy
+decision-support (rather than an LLM wrapper) is the **~6,000-line reasoning-and-verification
+layer we built on top** — and, where Cognee Cloud lacked a piece, the honest equivalent we
+built to fill it. Everything below is real code with tests and eval gates, not slideware.
+
+### 1. Graph-verified citations — the "red-thread" (`app/redthread.py`, ~300 LOC)
+LLMs fabricate citations. Ariadne doesn't let them. Every finding is rendered as a **multi-hop
+path that is re-checked against the actual graph edge set** —
+`<entity> ←symptoms— ClinicalKnowledgeGraph ←contains— DocumentChunk —is_part_of→ TextDocument` —
+so the claim terminates at the exact source note that backs it. If a node's provenance
+**cannot be walked** to a source document, it is reported as `unresolved` and **suppressed —
+never given a fabricated citation**. The gate assertion *"every red-thread edge exists in the
+graph"* is literally checkable, and `validate()` re-confirms every hop. This is an
+anti-hallucination guarantee enforced by graph topology, not by prompt-wishing.
+
+### 2. The time-travel counterfactual (`app/timetravel.py`, ~280 LOC)
+A genuinely novel algorithm, not a `recall()` call. For each past cutoff date it:
+(a) reconstructs the **as-of-date subgraph** (nodes dated on/before the cutoff — *never leaks a
+future-dated node*), (b) re-scans the phenotype **from the literal note text** using the same
+normalizer the agents use (invents no symptom, no date), and (c) re-runs the **identical**
+deterministic ranking. The *"flaggable 18 months earlier"* headline is therefore **computed, not
+hand-set** — and it is deliberately conservative: the flag fires only on a real **vascular
+discriminator** (claudication, absent pulse, bruit, inter-arm BP gap, renovascular
+hypertension), never on constitutional overlap alone.
+
+### 3. A deterministic clinical-reasoning layer around fuzzy recall (`app/agents/connections.py`)
+Cognee does the hybrid graph+vector recall; we add the rigor that makes it safe:
+**HPO-normalized phenotype** matching (not fuzzy text); a **grounded candidate universe** — the
+agent can only surface a condition that exists as a cited `LiteraturePattern` node in memory (a
+hard hallucination guardrail); a **reproducible weighted-overlap ranking** (stable across runs,
+testable offline, large-vessel signs weighted ×3); **citation-or-suppress** per candidate; and a
+**no-diagnosis lint** that rewrites/suppresses assertive language into "consider / investigate".
+
+### 4. Honest engineering where Cognee Cloud fell short
+We inspected the **live 49-path OpenAPI spec** before building and documented the gaps instead of
+faking them:
+- **No standalone `memify` trigger exists on the tenant.** So `improve()` is realized as feedback
+  chained to the QA a recall produced (`qa_id` + `used_graph_element_ids`), **plus** an app-level
+  `FeedbackLedger` that demotes 👎'd leads and drops ruled-out ones so precision@k measurably
+  rises and never regresses. We explicitly **do not claim** a Cloud-side reweight we can't observe
+  (`feedback_weights_applied` stays `false`) — the effect is applied at our boundary, transparently.
+- **Agents-as-principals RBAC** (`app/principals.py`, ~220 LOC): a real substrate (Cloud grants) /
+  enforcement (app boundary) split, so `family → clinical` returns `[]` *before* memory is touched.
+- **Clinical ontology normalizer** (`app/normalize.py`, ~260 LOC): RxNorm / LOINC / SNOMED / HPO so
+  matching is vocabulary-rigorous, not keyword.
+
+### 5. Rigor most hackathon projects skip
+A custom clinical `graph_model` ontology, **208 unit/contract tests**, and **phase-by-phase eval
+gates** (P1 / P2 / swarm / P3 / P4) that prove each capability against the live tenant — plus a
+snapshot-backed demo so nothing breaks on a contended cloud.
+
+> **One-line honest pitch:** *We didn't wrap Cognee — we built a verifiable clinical-reasoning
+> layer on it: graph-walked citations that can't be faked, and a time-travel counterfactual that
+> computes how much earlier a connected memory would have caught the disease. Where Cognee Cloud
+> lacked a piece, we said so and built the honest equivalent.*
+
+---
+
 ## Architecture
 
 ```
