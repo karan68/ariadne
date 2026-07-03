@@ -1,5 +1,5 @@
 import type { Snapshot } from "../lib/types";
-import { Card, cleanProse, EvidenceList, PageHead } from "../lib/ui";
+import { Card, EvidenceList, PageHead, Prose } from "../lib/ui";
 
 export default function Briefing({ snap }: { snap: Snapshot }) {
   const b = snap.agents.briefing.brief;
@@ -13,7 +13,7 @@ export default function Briefing({ snap }: { snap: Snapshot }) {
 
       <div className="grid-2">
         <Card title="Active picture" accent note="cited summary">
-          <div className="prose">{cleanProse(b.summary)}</div>
+          <Prose text={b.summary} />
           {snap.agents.briefing.brief.findings[0] && (
             <EvidenceList evidence={snap.agents.briefing.brief.findings[0].evidence} max={3} />
           )}

@@ -1,5 +1,5 @@
 import type { Snapshot } from "../lib/types";
-import { Card, cleanProse, EvidenceList, PageHead, Pill } from "../lib/ui";
+import { Card, EvidenceList, PageHead, Pill, Prose } from "../lib/ui";
 
 export default function Justify({ snap }: { snap: Snapshot }) {
   const j = snap.agents.justify;
@@ -26,7 +26,7 @@ export default function Justify({ snap }: { snap: Snapshot }) {
             title={<span style={{ fontSize: 13.5 }}>{el.label}</span>}
             note={el.satisfied ? <Pill kind="green">✓ cited · {el.source}</Pill> : <Pill kind="amber">missing</Pill>}
           >
-            <div className="prose">{cleanProse(el.content)}</div>
+            <Prose text={el.content} />
             <EvidenceList evidence={el.evidence} max={1} />
           </Card>
         ))}

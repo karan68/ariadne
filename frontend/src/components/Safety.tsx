@@ -1,5 +1,5 @@
 import type { Snapshot } from "../lib/types";
-import { Card, EvidenceList, PageHead, Pill } from "../lib/ui";
+import { Card, EvidenceList, PageHead, Pill, Prose } from "../lib/ui";
 
 const SEV: Record<string, string> = { major: "red", moderate: "amber", minor: "blue" };
 
@@ -23,7 +23,7 @@ export default function Safety({ snap }: { snap: Snapshot }) {
             title={<span style={{ fontSize: 13.5, textTransform: "capitalize" }}>{a.kind}: {a.medications.join(" + ")}</span>}
             note={<Pill kind={SEV[a.severity] ?? "amber"}>{a.severity}</Pill>}
           >
-            <div className="prose">{a.rationale}</div>
+            <Prose text={a.rationale} />
             <div style={{ marginTop: 6 }}><span className="cited-badge">✓ {a.evidence.length} cited (proves co-prescription)</span></div>
             <EvidenceList evidence={a.evidence} max={1} />
           </Card>

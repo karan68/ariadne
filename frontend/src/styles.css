@@ -225,6 +225,16 @@ body {
 /* ---------------------------------------------------------------- markdown-ish prose */
 .prose { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); white-space: pre-wrap; }
 .prose strong { color: var(--ink); font-weight: 650; }
+/* structured (markdown-rendered) prose: no pre-wrap, real block spacing */
+.prose-rich { white-space: normal; }
+.prose-rich > :first-child { margin-top: 0; }
+.prose-rich > :last-child { margin-bottom: 0; }
+.prose-h { color: var(--ink); font-weight: 650; font-size: 12.5px; letter-spacing: .01em;
+  margin: 13px 0 5px; }
+.prose-p { margin: 0 0 8px; }
+.prose-ul { margin: 2px 0 10px; padding-left: 18px; list-style: none; }
+.prose-ul li { position: relative; margin: 3px 0; padding-left: 2px; }
+.prose-ul li::before { content: "–"; position: absolute; left: -14px; color: var(--thread); }
 
 /* ---------------------------------------------------------------- timeline */
 .tl { position: relative; margin-left: 8px; padding-left: 24px; }

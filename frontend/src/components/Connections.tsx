@@ -1,5 +1,5 @@
 import type { Snapshot } from "../lib/types";
-import { Card, EvidenceList, FindingCard, PageHead, Pill } from "../lib/ui";
+import { Card, EvidenceList, FindingCard, PageHead, Pill, Prose } from "../lib/ui";
 import RedThreadViz from "./RedThreadViz";
 
 export default function Connections({ snap }: { snap: Snapshot }) {
@@ -59,7 +59,7 @@ export default function Connections({ snap }: { snap: Snapshot }) {
       <Card title="Top cited candidates" accent>
         {c.candidates.slice(0, 3).map((cand) => (
           <div key={cand.id} style={{ padding: "10px 0", borderBottom: "1px solid var(--line-soft)" }}>
-            <div className="prose">{cand.summary.replace(/【[^】]*】/g, "")}</div>
+            <Prose text={cand.summary} />
             <div style={{ marginTop: 6 }}><span className="cited-badge">✓ {cand.evidence.length} cited</span></div>
             <EvidenceList evidence={cand.evidence} max={2} />
           </div>
