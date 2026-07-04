@@ -104,6 +104,9 @@ flowchart LR
     B --> E["🗑️ forget()<br/>the patient deletes<br/>a record — for good"]
     E --> B
 ```
+
+![Figure 1 — The memory lifecycle: remember, recall, improve, forget, around one connected per-patient memory graph](img/figure1-lifecycle.png)
+
 *Figure 1 — The memory lifecycle. A patient's scattered history becomes one connected memory that can be questioned, corrected, and — on the patient's command — erased.*
 
 ---
@@ -122,6 +125,9 @@ flowchart TB
     Doc --> Mem
     Pat --> Mem
 ```
+
+![Figure 2 — Two doors into one memory: a clinician door to read and improve, a patient door to own and govern](img/figure2-two-doors.png)
+
 *Figure 2 — Two doors, one memory. The clinician reads and improves; the patient owns and governs.*
 
 **Through the clinician's door,** the doctor who finally felt Kavya's pulse would have opened her file and seen, in ten seconds, not a plastic bag but a briefing: active problems, current medicines, the through-line of her four years — every line footnoted to the note it came from. She would have seen a differential that weighed Kavya's *whole* pattern and put large-vessel vasculitis at the top, not because a black box said so, but with the reasoning laid out and each step cited. And she would have seen the moment that still gives me chills.
@@ -146,6 +152,9 @@ sequenceDiagram
     M-->>D: cited story: anemia → high ESR → young HTN → weak pulse
     D-->>K: "Let's investigate large-vessel vasculitis."
 ```
+
+![Figure 3 — The same patient in two worlds: before, the doctor inherits a folder and starts from zero; after, she inherits a cited memory and starts from the truth](img/figure3-before-after.png)
+
 *Figure 3 — The same patient, two worlds. In the first, the doctor inherits a folder and starts from zero. In the second, she inherits a memory and starts from the truth.*
 
 ---
@@ -184,6 +193,9 @@ flowchart TB
     Ariadne --> Pt
     Pt -->|grants / revokes access| ABDM
 ```
+
+![Figure 4 — The product on India's own rails: hospitals and labs feed ABDM/ABHA, the patient consents, and Ariadne turns those records into connected, cited understanding for clinician and patient](img/figure4-abdm-product.png)
+
 *Figure 4 — The product, on India's own rails. ABDM moves the records with consent; Ariadne turns those records into connected, cited understanding. The patient's ABHA is the key they hold.*
 
 **The wedge is ABDM.** India is already laying the rails to move records between hospitals with patient consent. Ariadne is the layer that sits on top and answers the question ABDM alone can't: *so what does all this mean, together?* We don't have to convince India to build a health-ID system. It's building one. We make it *smart*.
@@ -230,10 +242,11 @@ We can do better than a folder. We can give them a memory.
 
 ### A note on the diagrams
 
-All four figures are written in **Mermaid**. Medium doesn't render Mermaid directly, so to include them:
+All four figures are provided as ready-to-use **PNG images** in [`docs/img/`](img/) — just
+drag them into your Medium draft and use the italic *Figure* line as the caption. Medium doesn't
+render Mermaid directly, so the images are what you upload.
 
-1. Go to **[mermaid.live](https://mermaid.live)**.
-2. Paste a diagram's code block (everything between the ` ```mermaid ` fences).
-3. Export as **PNG** (or SVG) and upload the image into your Medium draft, using the italic *Figure* line as the caption.
-
-The diagrams are intentionally simple and legible at small sizes so they read well on a phone, which is how most of India will see them.
+The Mermaid source is kept inline (in the ` ```mermaid ` fences) so the diagrams stay editable.
+To regenerate the PNGs after an edit, re-run the render step from `docs/img/README.md`. The
+diagrams are intentionally simple and legible at small sizes so they read well on a phone, which
+is how most of India will see them.
